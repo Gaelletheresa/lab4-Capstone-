@@ -1,0 +1,38 @@
+{
+  "source_url": "https://api.tvmaze.com/shows?page=0",
+  "records_processed": 240,
+  "unique_languages": [
+    "English",
+    "Japanese"
+  ],
+  "top_genres": [
+    [
+      "Drama",
+      154
+    ],
+    [
+      "Comedy",
+      66
+    ],
+    [
+      "Crime",
+      57
+    ],
+    [
+      "Action",
+      55
+    ],
+    [
+      "Thriller",
+      41
+    ],
+    [
+      "Science-Fiction",
+      39
+    ]
+  ],
+  "average_rating_by_language": {
+    "English": 7.5806034482758635,
+    "Japanese": 7.875
+  }
+}
