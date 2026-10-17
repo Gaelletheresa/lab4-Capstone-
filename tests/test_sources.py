@@ -29,7 +29,7 @@ def test_a_failed_download_raises_a_source_error(monkeypatch):
         raise requests.ConnectionError("no network")
 
     monkeypatch.setattr(sources.requests, "get", fake_get)
-    with pytest.raises(SourceError, match="no network"):
+    with pytest.raises(SourceError, match="reach"):
         TVMazeSource("https://example.invalid", timeout=1).fetch()
 
 

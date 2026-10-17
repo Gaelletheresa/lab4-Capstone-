@@ -3,11 +3,8 @@
 import requests
 
 from .config import TIMEOUT, URL
+from .errors import SourceError
 from .models import Show
-
-
-class SourceError(Exception):
-    """Raised when the records cannot be downloaded."""
 
 
 class TVMazeSource:
@@ -25,5 +22,5 @@ class TVMazeSource:
             response.raise_for_status()
             raw_records = response.json()
         except requests.RequestException as err:
-            raise SourceError(str(err)) from err
+            raise SourceError(f"Could not reach {self.url}: {err}") from err
         return [Show(raw) for raw in raw_records]
