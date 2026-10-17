@@ -4,7 +4,8 @@ import pytest
 import requests
 
 from tvsummary import sources
-from tvsummary.sources import SourceError, TVMazeSource
+from tvsummary.errors import DataShapeError, SourceError
+from tvsummary.sources import TVMazeSource
 
 
 class FakeResponse:
@@ -41,3 +42,19 @@ def test_a_good_download_returns_show_objects(monkeypatch):
     )
     shows = TVMazeSource("https://example.invalid", timeout=1).fetch()
     assert [show.name for show in shows] == ["One", "Two"]
+
+
+@pytest.mark.parametrize(
+    "bad_data",
+    [
+        pytest.param({"error": "not a list"}, id="dict instead of list"),
+        pytest.param(["just a string"], id="list of non-dictionaries"),
+    ],
+)
+def test_unexpected_response_shape_raises_data_shape_error(monkeypatch, bad_data):
+    """A response that is not a list of dictionaries raises DataShapeError."""
+    monkeypatch.setattr(
+        sources.requests, "get", lambda *args, **kwargs: FakeResponse(bad_data)
+    )
+    with pytest.raises(DataShapeError, match="list of show"):
+        TVMazeSource("https://example.invalid", timeout=1).fetch()  

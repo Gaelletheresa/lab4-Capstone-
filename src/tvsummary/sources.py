@@ -3,7 +3,7 @@
 import requests
 
 from .config import TIMEOUT, URL
-from .errors import SourceError
+from .errors import DataShapeError, SourceError
 from .models import Show
 
 
@@ -23,4 +23,11 @@ class TVMazeSource:
             raw_records = response.json()
         except requests.RequestException as err:
             raise SourceError(f"Could not reach {self.url}: {err}") from err
+        if not isinstance(raw_records, list) or not all(
+            isinstance(raw, dict) for raw in raw_records
+        ):
+            raise DataShapeError(
+                f"Expected a list of show records from {self.url}, "
+                "but the response had a different shape."
+            )
         return [Show(raw) for raw in raw_records]
