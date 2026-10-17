@@ -1,4 +1,5 @@
 """Settings for the tvsummary package."""
+
 from pathlib import Path
 
 URL = "https://api.tvmaze.com/shows?page=0"

@@ -1,4 +1,5 @@
 """Build the summary from aggregation objects and write it to a JSON file."""
+
 import json
 
 from .config import URL

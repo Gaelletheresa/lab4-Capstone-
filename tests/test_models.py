@@ -1,4 +1,5 @@
 """Tests for the Show record class, using handmade records and no network."""
+
 import unittest
 
 from tvsummary import Show
@@ -9,12 +10,14 @@ class TestShow(unittest.TestCase):
 
     def test_complete_record_is_kept(self):
         """A complete record keeps all of its values."""
-        show = Show({
-            "name": "Test Show",
-            "language": "English",
-            "genres": ["Drama", "Comedy"],
-            "rating": {"average": 8.5},
-        })
+        show = Show(
+            {
+                "name": "Test Show",
+                "language": "English",
+                "genres": ["Drama", "Comedy"],
+                "rating": {"average": 8.5},
+            }
+        )
         self.assertEqual(show.name, "Test Show")
         self.assertEqual(show.language, "English")
         self.assertEqual(show.genres, ["Drama", "Comedy"])
@@ -22,12 +25,14 @@ class TestShow(unittest.TestCase):
 
     def test_missing_values_are_cleaned(self):
         """Missing or empty values become safe defaults."""
-        show = Show({
-            "name": "Bare Show",
-            "language": None,
-            "genres": None,
-            "rating": {"average": None},
-        })
+        show = Show(
+            {
+                "name": "Bare Show",
+                "language": None,
+                "genres": None,
+                "rating": {"average": None},
+            }
+        )
         self.assertIsNone(show.language)
         self.assertEqual(show.genres, [])
         self.assertIsNone(show.rating)

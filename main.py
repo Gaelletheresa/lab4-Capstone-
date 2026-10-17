@@ -1,4 +1,5 @@
 """Entry point: download the shows, build the summary and write it."""
+
 import sys
 
 from tvsummary import (

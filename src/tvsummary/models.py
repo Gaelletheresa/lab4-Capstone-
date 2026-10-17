@@ -16,4 +16,6 @@ class Show:
         """Return a short readable description of the show."""
         genres = ", ".join(self.genres) if self.genres else "no genre listed"
         rating = self.rating if self.rating is not None else "no rating"
-        return f"{self.name} ({self.language or 'unknown language'}) - {genres} - {rating}"
+        return (
+            f"{self.name} ({self.language or 'unknown language'}) - {genres} - {rating}"
+        )

@@ -1,4 +1,5 @@
 """Download TV show records from the TVmaze API. Only this module uses requests."""
+
 import requests
 
 from .config import TIMEOUT, URL

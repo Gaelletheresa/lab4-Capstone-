@@ -1,4 +1,5 @@
 """tvsummary: summarize TV shows from the TVmaze API."""
+
 from .aggregations import (
     Aggregation,
     AverageRatingByLanguage,
