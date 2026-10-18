@@ -2,15 +2,23 @@
 
 import json
 import logging
+from pathlib import Path
+from typing import Any
 
+from .aggregations import Aggregation
 from .config import URL
+from .models import Show
 
 logger = logging.getLogger(__name__)
 
 
-def build_summary(shows, aggregations, source_url=URL):
+def build_summary(
+    shows: list[Show],
+    aggregations: list[Aggregation],
+    source_url: str = URL,
+) -> dict[str, Any]:
     """Run every aggregation on the shows and combine the results in one dict."""
-    summary = {"source_url": source_url}
+    summary: dict[str, Any] = {"source_url": source_url}
     for aggregation in aggregations:
         logger.debug("Running aggregation %s", aggregation.key)
         summary[aggregation.key] = aggregation.compute(shows)
@@ -18,7 +26,7 @@ def build_summary(shows, aggregations, source_url=URL):
     return summary
 
 
-def write_summary(summary, path):
+def write_summary(summary: dict[str, Any], path: Path) -> None:
     """Write the summary to a JSON file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
