@@ -1,5 +1,7 @@
 """Tests for the aggregation classes, using handmade records and no network."""
 
+import logging
+
 import pytest
 
 from tvsummary.aggregations import (
@@ -44,3 +46,11 @@ def test_base_class_compute_must_be_overridden():
     """The base Aggregation class refuses to compute anything itself."""
     with pytest.raises(NotImplementedError, match="override"):
         Aggregation("anything").compute([])
+
+
+def test_average_rating_warns_about_skipped_shows(sample_shows, caplog):
+    """Shows with no language or no rating are skipped and a warning is logged."""
+    with caplog.at_level(logging.WARNING, logger="tvsummary.aggregations"):
+        AverageRatingByLanguage().compute(sample_shows)
+    assert "Skipped 2 shows" in caplog.text
+    assert caplog.records[0].levelname == "WARNING"

@@ -1,5 +1,9 @@
 """Aggregations over Show records: one base class and four subclasses."""
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Aggregation:
     """Base class: each aggregation has a summary key and a compute method."""
@@ -73,11 +77,21 @@ class AverageRatingByLanguage(Aggregation):
     def compute(self, shows):
         """Return a dictionary of average rating per language."""
         ratings = {}
+        skipped = 0
         for show in shows:
             if show.language and show.rating is not None:
                 if show.language not in ratings:
                     ratings[show.language] = []
                 ratings[show.language].append(show.rating)
+            else:
+                skipped += 1
+
+        if skipped:
+            logger.warning(
+                "Skipped %s shows with no language or no rating "
+                "when averaging ratings",
+                skipped,
+            )
 
         averages = {}
         for language, rating_list in ratings.items():
