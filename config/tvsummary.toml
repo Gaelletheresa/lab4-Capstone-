@@ -1,0 +1,20 @@
+# Settings for the tvsummary package.
+# Every value the program reads lives here.
+
+# Where the TV show records are downloaded from.
+source_url = "https://api.tvmaze.com/shows?page=0"
+
+# How many seconds to wait for the download before giving up.
+timeout = 10
+
+# Folder where summary.json and run_info.json are written.
+output_dir = "data/processed"
+
+# Seed for the random choice of featured shows. Same seed, same list.
+seed = 42
+
+# How many show names go into the featured_shows list.
+sample_size = 5
+
+# How much detail the log shows: DEBUG, INFO, WARNING or ERROR.
+log_level = "INFO"
