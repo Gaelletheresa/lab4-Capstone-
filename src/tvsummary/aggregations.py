@@ -1,6 +1,9 @@
 """Aggregations over Show records: one base class and four subclasses."""
 
 import logging
+from typing import Any
+
+from .models import Show
 
 logger = logging.getLogger(__name__)
 
@@ -8,11 +11,11 @@ logger = logging.getLogger(__name__)
 class Aggregation:
     """Base class: each aggregation has a summary key and a compute method."""
 
-    def __init__(self, key):
+    def __init__(self, key: str) -> None:
         """Store the key under which the result appears in the summary."""
         self.key = key
 
-    def compute(self, shows):
+    def compute(self, shows: list[Show]) -> Any:
         """Return the result for this aggregation. Subclasses must override."""
         raise NotImplementedError("Subclasses must override compute().")
 
@@ -20,11 +23,11 @@ class Aggregation:
 class RecordCount(Aggregation):
     """Counts how many shows were processed."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Use the key records_processed."""
         super().__init__("records_processed")
 
-    def compute(self, shows):
+    def compute(self, shows: list[Show]) -> int:
         """Return the number of shows."""
         return len(shows)
 
@@ -32,11 +35,11 @@ class RecordCount(Aggregation):
 class UniqueLanguages(Aggregation):
     """Lists the unique languages found in the shows."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Use the key unique_languages."""
         super().__init__("unique_languages")
 
-    def compute(self, shows):
+    def compute(self, shows: list[Show]) -> list[str]:
         """Return the sorted list of unique languages."""
         return sorted({show.language for show in shows if show.language})
 
@@ -44,14 +47,14 @@ class UniqueLanguages(Aggregation):
 class TopGenres(Aggregation):
     """Finds the genres with the most shows."""
 
-    def __init__(self, n=6):
+    def __init__(self, n: int = 6) -> None:
         """Use the key top_genres and keep the top n genres."""
         super().__init__("top_genres")
         self.n = n
 
-    def compute(self, shows):
+    def compute(self, shows: list[Show]) -> list[tuple[str, int]]:
         """Return the top n genres as (genre, count) tuples."""
-        counts = {}
+        counts: dict[str, int] = {}
         for show in shows:
             if not show.genres:
                 counts["(no genre listed)"] = counts.get("(no genre listed)", 0) + 1
@@ -62,7 +65,7 @@ class TopGenres(Aggregation):
         return pairs[: self.n]
 
     @staticmethod
-    def _get_count(item):
+    def _get_count(item: tuple[str, int]) -> int:
         """Return the count from a genre and count pair."""
         return item[1]
 
@@ -70,13 +73,13 @@ class TopGenres(Aggregation):
 class AverageRatingByLanguage(Aggregation):
     """Averages the show ratings for each language."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Use the key average_rating_by_language."""
         super().__init__("average_rating_by_language")
 
-    def compute(self, shows):
+    def compute(self, shows: list[Show]) -> dict[str, float]:
         """Return a dictionary of average rating per language."""
-        ratings = {}
+        ratings: dict[str, list[float]] = {}
         skipped = 0
         for show in shows:
             if show.language and show.rating is not None:
@@ -87,12 +90,9 @@ class AverageRatingByLanguage(Aggregation):
                 skipped += 1
 
         if skipped:
-            logger.warning(
-                "Skipped %s shows with no language or no rating when averaging ratings",
-                skipped,
-            )
+            logger.warning("Skipped %s shows with no language or no rating", skipped)
 
-        averages = {}
+        averages: dict[str, float] = {}
         for language, rating_list in ratings.items():
             averages[language] = sum(rating_list) / len(rating_list)
         return averages
