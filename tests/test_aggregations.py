@@ -4,6 +4,7 @@ import logging
 
 import pytest
 
+from tvsummary import Show
 from tvsummary.aggregations import (
     Aggregation,
     AverageRatingByLanguage,
