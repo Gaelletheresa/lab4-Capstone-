@@ -32,7 +32,14 @@
     ]
   ],
   "average_rating_by_language": {
-    "English": 7.5806034482758635,
+    "English": 7.578017241379312,
     "Japanese": 7.875
-  }
+  },
+  "featured_shows": [
+    "How I Met Your Mother",
+    "American Horror Story",
+    "Homeland",
+    "The Fosters",
+    "The Walking Dead"
+  ]
 }
