@@ -1,6 +1,7 @@
 """Aggregations over Show records: one base class and four subclasses."""
 
 import logging
+import random
 from typing import Any
 
 from .models import Show
@@ -96,3 +97,19 @@ class AverageRatingByLanguage(Aggregation):
         for language, rating_list in ratings.items():
             averages[language] = sum(rating_list) / len(rating_list)
         return averages
+
+
+class FeaturedShows(Aggregation):
+    """Picks a few show names at random, repeatably, from a seed."""
+
+    def __init__(self, seed: int, sample_size: int) -> None:
+        """Use the key featured_shows, with the seed and number of names to pick."""
+        super().__init__("featured_shows")
+        self.seed = seed
+        self.sample_size = sample_size
+
+    def compute(self, shows: list[Show]) -> list[str]:
+        """Return sample_size show names chosen with random.Random(seed)."""
+        names = [show.name for show in shows]
+        rng = random.Random(self.seed)
+        return rng.sample(names, min(self.sample_size, len(names)))

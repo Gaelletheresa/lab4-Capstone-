@@ -3,6 +3,7 @@
 from .aggregations import (
     Aggregation,
     AverageRatingByLanguage,
+    FeaturedShows,
     RecordCount,
     TopGenres,
     UniqueLanguages,
@@ -16,7 +17,7 @@ __all__ = [
     "Aggregation",
     "AverageRatingByLanguage",
     "DataShapeError",
-    "RecordCount",
+    "FeaturedShowsRecordCount",
     "SettingsError",
     "Show",
     "SourceError",

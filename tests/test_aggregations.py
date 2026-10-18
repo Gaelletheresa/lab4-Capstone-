@@ -7,6 +7,7 @@ import pytest
 from tvsummary.aggregations import (
     Aggregation,
     AverageRatingByLanguage,
+    FeaturedShows,
     RecordCount,
     TopGenres,
     UniqueLanguages,
@@ -54,3 +55,18 @@ def test_average_rating_warns_about_skipped_shows(sample_shows, caplog):
         AverageRatingByLanguage().compute(sample_shows)
     assert "Skipped 2 shows" in caplog.text
     assert caplog.records[0].levelname == "WARNING"
+
+
+def test_same_seed_gives_the_same_featured_shows():
+    """Running twice with one seed returns the identical list."""
+    shows = [Show({"name": f"Show {number}"}) for number in range(20)]
+    first = FeaturedShows(seed=42, sample_size=5).compute(shows)
+    second = FeaturedShows(seed=42, sample_size=5).compute(shows)
+    assert first == second
+    assert len(first) == 5
+
+
+def test_featured_shows_never_asks_for_more_than_exist(sample_shows):
+    """A sample size larger than the list returns every name once."""
+    result = FeaturedShows(seed=1, sample_size=10).compute(sample_shows)
+    assert sorted(result) == ["Alpha", "Beta", "Delta", "Gamma"]
