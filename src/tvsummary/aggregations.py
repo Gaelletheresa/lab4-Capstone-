@@ -88,8 +88,7 @@ class AverageRatingByLanguage(Aggregation):
 
         if skipped:
             logger.warning(
-                "Skipped %s shows with no language or no rating "
-                "when averaging ratings",
+                "Skipped %s shows with no language or no rating when averaging ratings",
                 skipped,
             )
 
