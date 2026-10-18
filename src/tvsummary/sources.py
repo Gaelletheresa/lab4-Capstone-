@@ -14,12 +14,12 @@ logger = logging.getLogger(__name__)
 class TVMazeSource:
     """Downloads TV shows from the TVmaze API and returns Show objects."""
 
-    def __init__(self, url=URL, timeout=TIMEOUT):
+    def __init__(self, url: str = URL, timeout: float = TIMEOUT) -> None:
         """Store the URL and the timeout to use for the download."""
         self.url = url
         self.timeout = timeout
 
-    def fetch(self):
+    def fetch(self) -> list[Show]:
         """Download the shows and return them as a list of Show objects."""
         logger.info("Downloading shows from %s", self.url)
         try:
