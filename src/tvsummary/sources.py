@@ -1,10 +1,14 @@
 """Download TV show records from the TVmaze API. Only this module uses requests."""
 
+import logging
+
 import requests
 
 from .config import TIMEOUT, URL
 from .errors import DataShapeError, SourceError
 from .models import Show
+
+logger = logging.getLogger(__name__)
 
 
 class TVMazeSource:
@@ -17,6 +21,7 @@ class TVMazeSource:
 
     def fetch(self):
         """Download the shows and return them as a list of Show objects."""
+        logger.info("Downloading shows from %s", self.url)
         try:
             response = requests.get(self.url, timeout=self.timeout)
             response.raise_for_status()
@@ -30,4 +35,5 @@ class TVMazeSource:
                 f"Expected a list of show records from {self.url}, "
                 "but the response had a different shape."
             )
+        logger.debug("Received %s records", len(raw_records))
         return [Show(raw) for raw in raw_records]

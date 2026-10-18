@@ -1,4 +1,5 @@
 """Tests for downloading shows, with the network replaced by fakes."""
+import logging
 
 import pytest
 import requests
@@ -58,3 +59,14 @@ def test_unexpected_response_shape_raises_data_shape_error(monkeypatch, bad_data
     )
     with pytest.raises(DataShapeError, match="list of show"):
         TVMazeSource("https://example.invalid", timeout=1).fetch()  
+
+
+def test_a_good_download_logs_how_many_records_arrived(monkeypatch, caplog):
+    """A successful download logs the record count at DEBUG level."""
+    raw_records = [{"name": "One"}, {"name": "Two"}]
+    monkeypatch.setattr(
+        sources.requests, "get", lambda *args, **kwargs: FakeResponse(raw_records)
+    )
+    with caplog.at_level(logging.DEBUG, logger="tvsummary.sources"):
+        TVMazeSource("https://example.invalid", timeout=1).fetch()
+    assert "Received 2 records" in caplog.text
